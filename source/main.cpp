@@ -6,6 +6,7 @@
 #endif
 
 int splatsave(int argc, char const* argv[]) {
+    printf("%llx\n", sizeof(SaveDataCmn::Section));
     std::string path;
     if (argc < 2)
         path = "save.dat";

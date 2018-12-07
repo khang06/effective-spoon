@@ -17,6 +17,8 @@
 #endif
 
 #include "SeedRand.h"
+#include "util.h"
+#include "SaveDataCmn.h"
 
 class SaveDataFactory {
    public:
@@ -98,6 +100,26 @@ class SaveDataFactory {
     int getSaveVersion();
     EncodeState getInitialEncodeState();
 
+    typedef struct {
+        // header
+        uint32_t SaveVersion;
+        uint32_t DevSaveVersion;
+        uint32_t CRC32;
+        INSERT_PADDING_BYTES(4)
+
+        // body
+        SaveDataCmn::Section SaveDataCmn;
+        INSERT_PADDING_BYTES(0xC750);  // SaveDataVss
+        INSERT_PADDING_BYTES(0x33E8);  // SaveDataLocal
+        INSERT_PADDING_BYTES(0x5E78);  // SaveDataMsn
+        INSERT_PADDING_BYTES(0x2D00);  // SaveDataShop
+        INSERT_PADDING_BYTES(0x49C0);  // SaveDataCoop
+        INSERT_PADDING_BYTES(0x11C);   // SaveDataFest
+        INSERT_PADDING_BYTES(0x3E460); // SaveDataStats
+        INSERT_PADDING_BYTES(0x2544);  // SaveDataMsnOcta
+    } SaveFile;
+    SaveFile parseSave();
+
     class SaveSizeUnknown : public std::exception {
     public:
         size_t m_size;
@@ -112,4 +134,5 @@ class SaveDataFactory {
         int m_version;
         UnsupportedSaveVersion(const int version) : m_version(version) {}
     };
+    class UnsupportedSaveParseVersion : public std::exception {};
 };
