@@ -471,3 +471,7 @@ int SaveDataFactory::getSaveVersion() { return m_version; }
 SaveDataFactory::EncodeState SaveDataFactory::getInitialEncodeState() {
     return m_initial_encodeState;
 }
+
+SaveDataFactory::SaveFile* SaveDataFactory::parseSave() {
+    return reinterpret_cast<SaveDataFactory::SaveFile*>(m_saveData);
+}

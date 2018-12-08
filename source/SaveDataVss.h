@@ -1,37 +1,37 @@
 #include <cstdint>
 #include "util.h"
 #include "CommonStructs.h"
+#include <uchar.h>
 
 class SaveDataVss {
     public:
         typedef struct {
             float Power;
-            float Rd;
+            float Rd; // Rating Deviation
             float Volatility;
-            uint32_t Unknown;
+            float Unknown;
         } MMR;
         static_assert(sizeof(MMR) == 0x10, "SaveDataVss::MMR must be 0x10 bytes long");
 
         typedef struct {
-            uint64_t Time1;
-            uint64_t Time2;
-            uint64_t Time3;
+            uint64_t LastUpdated; // Unix time localized to current time zone
+            uint64_t CurrentSeasonStart; // Unix time GMT
+            uint64_t NextSeasonStart; // Unix time GMT
             MMR MMR1;
             MMR MMR2;
             INSERT_PADDING_BYTES(0x10);
         } UdemaeX;
-        static_assert(sizeof(UdemaeX) == 0x28, "SaveDataVss::UdemaeX must be 0x48 bytes long");
+        static_assert(sizeof(UdemaeX) == 0x48, "SaveDataVss::UdemaeX must be 0x48 bytes long");
 
         typedef struct {
-            INSERT_PADDING_BYTES(8);
-            char16_t Name[0x13];
-            INSERT_PADDING_BYTES(0xC);
+            char16_t Name[0xA];
+            INSERT_PADDING_BYTES(0x14);
         } PlayerSystemInfo;
         static_assert(sizeof(PlayerSystemInfo) == 0x28, "SaveDataVss::PlayerSystemInfo must be 0x28 bytes long");
 
         typedef struct {
             INSERT_PADDING_BYTES(0x16);
-            char16_t Name[0x9];
+            char16_t Name[0xA];
             INSERT_PADDING_BYTES(0x12);
             uint32_t PlayerModelType;
             uint32_t PlayerHairId;
@@ -51,7 +51,7 @@ class SaveDataVss {
             uint32_t SplatZonesRank;
             uint32_t TowerControlRank;
             uint32_t ClamBlitzRank;
-            INSERT_PADDING_BYTES(0xB0);
+            INSERT_PADDING_BYTES(0xAC);
         } PlayerInfo;
         static_assert(sizeof(PlayerInfo) == 0x1A0, "SaveDataVss::PlayerInfo must be 0x1A0 bytes long");
 
@@ -72,7 +72,7 @@ class SaveDataVss {
             uint64_t Time;
             INSERT_PADDING_BYTES(8);
             TagPlayers Players;
-            MMR MMR[5];
+            MMR MMR[6];
             INSERT_PADDING_BYTES(2);
         } TagScore;
         static_assert(sizeof(TagScore) == 0x140, "SaveDataVss::TagScore must be 0x140 bytes long");
@@ -81,24 +81,22 @@ class SaveDataVss {
             uint32_t Level;
             uint32_t Exp;
             uint32_t Stars;
-            INSERT_PADDING_BYTES(0xC);
+            INSERT_PADDING_BYTES(0x8);
             uint32_t TicketBoostRemaining;
 
             // Ranks
             uint32_t RainmakerRank;
-            INSERT_PADDING_BYTES(0xC);
+            INSERT_PADDING_BYTES(8);
             uint32_t SplatZonesRank;
-            INSERT_PADDING_BYTES(0xC);
+            INSERT_PADDING_BYTES(8);
             uint32_t TowerControlRank;
-            INSERT_PADDING_BYTES(0xC);
+            INSERT_PADDING_BYTES(8);
             uint32_t ClamBlitzRank;
-            INSERT_PADDING_BYTES(0xC);
+            INSERT_PADDING_BYTES(8);
 
             INSERT_PADDING_BYTES(0x18);
 
             MMR MMR[0x20]; // 0 = Turf War, 1 = Rainmaker, 2 = Splat Zones, 3 = Tower Control, 4 = Clam Blitz
-
-            INSERT_PADDING_BYTES(0x1B4);
 
             TagScore PairLeagueResults[0x20];
             TagScore TeamLeagueResults[0x20];
@@ -107,9 +105,10 @@ class SaveDataVss {
 
             PlayerInfo PlazaNPCs[0x19];
 
-            INSERT_PADDING_BYTES(0x28B8);
+            UdemaeX UdemaeX1[6];
+            UdemaeX UdemaeX2[6];
 
-            UdemaeX UdemaeX[6]
+            INSERT_PADDING_BYTES(0x3CA0);
         } Section;
         static_assert(sizeof(Section) == 0xC750, "SaveDataVss::Section must be 0xC750 bytes long");
 };

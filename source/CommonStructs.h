@@ -1,3 +1,4 @@
+#pragma once
 #include <cstdint>
 #include "util.h"
 
@@ -22,5 +23,4 @@ class CommonStructs {
             uint32_t Exp;
         } Gear;
         static_assert(sizeof(Gear) == 0x20, "CommonStructs::Gear must be 0x20 bytes long");
-
 };

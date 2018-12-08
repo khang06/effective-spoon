@@ -105,7 +105,7 @@ class SaveDataCmn {
             uint32_t OctolingPlayerEyeColorId;
             uint32_t IsOctoling;
 
-            INSERT_PADDING_BYTES(0x2D2C);
+            INSERT_PADDING_BYTES(0x2D24);
         } Section;
-        //static_assert(sizeof(Section) == 0x2B210, "SaveDataCmn::Section must be 0x2B210 bytes long"); // currently 0x2B218 bytes long :/
+        static_assert(sizeof(Section) == 0x2B210, "SaveDataCmn::Section must be 0x2B210 bytes long");
 };

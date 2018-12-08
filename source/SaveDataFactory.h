@@ -19,6 +19,7 @@
 #include "SeedRand.h"
 #include "util.h"
 #include "SaveDataCmn.h"
+#include "SaveDataVss.h"
 
 class SaveDataFactory {
    public:
@@ -109,7 +110,7 @@ class SaveDataFactory {
 
         // body
         SaveDataCmn::Section SaveDataCmn;
-        INSERT_PADDING_BYTES(0xC750);  // SaveDataVss
+        SaveDataVss::Section SaveDataVss;
         INSERT_PADDING_BYTES(0x33E8);  // SaveDataLocal
         INSERT_PADDING_BYTES(0x5E78);  // SaveDataMsn
         INSERT_PADDING_BYTES(0x2D00);  // SaveDataShop
@@ -118,7 +119,7 @@ class SaveDataFactory {
         INSERT_PADDING_BYTES(0x3E460); // SaveDataStats
         INSERT_PADDING_BYTES(0x2544);  // SaveDataMsnOcta
     } SaveFile;
-    SaveFile parseSave();
+    SaveFile* parseSave();
 
     class SaveSizeUnknown : public std::exception {
     public:
